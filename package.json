@@ -1,8 +1,9 @@
 {
   "name": "@axetroy/fata",
   "version": "0.1.0",
-  "description": "Graceful and modern HTTP client",
+  "description": "Elegant and modern HTTP client based on Fetch",
   "main": "dist/fata.js",
+  "typings": "./dist",
   "scripts": {
     "compile": "npx tsc",
     "build": "cross-env NODE_ENV=production webpack --progress",

@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/axetroy/fata/workflows/test/badge.svg)](https://github.com/axetroy/fata/actions)
 
-基于 Fetch 的优雅的/现代化的 HTTP 客户端
+基于 Fetch 的优雅的且现代化的 HTTP 客户端
 
 ### 安装
 

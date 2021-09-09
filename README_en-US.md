@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/axetroy/fata/workflows/test/badge.svg)](https://github.com/axetroy/fata/actions)
 
-Elegant/modern HTTP client based on Fetch
+Elegant and modern HTTP client based on Fetch
 
 ### Installation
 
