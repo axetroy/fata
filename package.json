@@ -1,0 +1,28 @@
+{
+  "name": "@axetroy/fetest",
+  "version": "0.1.0",
+  "description": "Graceful and modern HTTP client",
+  "main": "dist/fetest.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "README.md",
+    "LICENSE",
+    "./dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/axetroy/fetest.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/axetroy/fetest/issues"
+  },
+  "homepage": "https://github.com/axetroy/fetest#readme",
+  "devDependencies": {
+    "typescript": "4.4.2"
+  }
+}

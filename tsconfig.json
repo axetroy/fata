@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "target": "ES2015",
+    "outDir": "./dist",
+    "declaration": true,
+    "lib": ["ESNEXT", "DOM"]
+  }
+}
