@@ -1,6 +1,6 @@
 [中文简体](README.md) | English
 
-[![Build Status](https://github.com/axetroy/fata/workflows/test/badge.svg)](https://github.com/axetroy/fata/actions)
+[![Build Status](https://github.com/axetroy/fata/workflows/ci/badge.svg)](https://github.com/axetroy/fata/actions)
 
 Elegant and modern HTTP client based on Fetch
 
