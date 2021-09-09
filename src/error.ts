@@ -1,8 +1,8 @@
-export interface IFetaError extends Error {
+export interface IFataError extends Error {
   response?: Response;
 }
 
-export class FetaError extends Error implements IFetaError {
+export class FataError extends Error implements IFataError {
   constructor(message: string, private _resp?: Response) {
     super(message);
   }
@@ -11,12 +11,12 @@ export class FetaError extends Error implements IFetaError {
     return this._resp;
   }
 
-  static fromResponse(resp: Response): IFetaError {
-    return new FetaError(resp.statusText, resp);
+  static fromResponse(resp: Response): IFataError {
+    return new FataError(resp.statusText, resp);
   }
 
-  static fromError(err: Error): IFetaError {
-    if (err instanceof FetaError) return err;
-    return new FetaError(err.message || "unknown error: " + err);
+  static fromError(err: Error): IFataError {
+    if (err instanceof FataError) return err;
+    return new FataError(err.message || "unknown error: " + err);
   }
 }

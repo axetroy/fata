@@ -23,9 +23,15 @@ jobs:
         run: |
           npm run test
 
+      - name: Build
+        run: |
+          npm run build
+
+      # - uses: actions/checkout@v2
+
   release:
     name: Release to Github
-    if: startsWith(github.ref, 'refs/tags/') && github.repository == 'axetroy/fetest'
+    if: startsWith(github.ref, 'refs/tags/') && github.repository == 'axetroy/fata'
     needs: [test]
     runs-on: ubuntu-latest
     steps:

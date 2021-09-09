@@ -1,11 +1,12 @@
 {
-  "name": "@axetroy/fetest",
+  "name": "@axetroy/fata",
   "version": "0.1.0",
   "description": "Graceful and modern HTTP client",
-  "main": "dist/fetest.js",
-  "type": "module",
+  "main": "dist/fata.js",
   "scripts": {
-    "build": "npx tsc",
+    "compile": "npx tsc",
+    "build": "cross-env NODE_ENV=production webpack --progress",
+    "watch": "cross-env NODE_ENV=development webpack --progress --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "files": [
@@ -15,15 +16,23 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/axetroy/fetest.git"
+    "url": "git+https://github.com/axetroy/fata.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/axetroy/fetest/issues"
+    "url": "https://github.com/axetroy/fata/issues"
   },
-  "homepage": "https://github.com/axetroy/fetest#readme",
+  "homepage": "https://github.com/axetroy/fata#readme",
   "devDependencies": {
-    "typescript": "4.4.2"
+    "@types/node": "16.9.0",
+    "@types/webpack": "5.28.0",
+    "declaration-bundler-webpack-plugin": "1.0.3",
+    "ts-loader": "9.2.5",
+    "ts-node": "10.2.1",
+    "tsconfig-paths-webpack-plugin": "3.5.1",
+    "typescript": "4.4.2",
+    "webpack": "5.52.0",
+    "webpack-cli": "4.8.0"
   }
 }

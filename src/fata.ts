@@ -1,5 +1,5 @@
-import { FetaForm } from "./form";
-import { IFetaError, FetaError } from "./error";
+import { FataForm } from "./form";
+import { IFataError, FataError } from "./error";
 import { IRequestInterceptor, RequestInterceptor } from "./interceptor/request";
 import { IResponseInterceptor, ResponseInterceptor } from "./interceptor/response";
 import { timeoutIt } from "./util";
@@ -8,25 +8,25 @@ interface Stringable {
   toString(): string;
 }
 
-interface IFetaHeaderMapString {
+interface IFataHeaderMapString {
   [key: string]: string;
 }
 
 type IMethod = "GET" | "POST" | "DELETE" | "PUT" | "HEAD" | "OPTIONS" | "TRACE" | "PATCH";
 
-interface IFetaHeaderConfig {
-  common: IFetaHeaderMapString;
-  GET: IFetaHeaderMapString;
-  POST: IFetaHeaderMapString;
-  DELETE: IFetaHeaderMapString;
-  PUT: IFetaHeaderMapString;
-  HEAD: IFetaHeaderMapString;
-  OPTIONS: IFetaHeaderMapString;
-  TRACE: IFetaHeaderMapString;
-  PATCH: IFetaHeaderMapString;
+interface IFataHeaderConfig {
+  common: IFataHeaderMapString;
+  GET: IFataHeaderMapString;
+  POST: IFataHeaderMapString;
+  DELETE: IFataHeaderMapString;
+  PUT: IFataHeaderMapString;
+  HEAD: IFataHeaderMapString;
+  OPTIONS: IFataHeaderMapString;
+  TRACE: IFataHeaderMapString;
+  PATCH: IFataHeaderMapString;
 }
 
-interface IFetaRequestCommonOptions extends Omit<RequestInit, "body" | "method"> {
+interface IFataRequestCommonOptions extends Omit<RequestInit, "body" | "method"> {
   path?: {
     [key: string]: Stringable;
   };
@@ -40,37 +40,37 @@ interface IFetaRequestCommonOptions extends Omit<RequestInit, "body" | "method">
   timeout?: number;
 }
 
-export interface IFetaRequestOptions extends IFetaRequestCommonOptions {
+export interface IFataRequestOptions extends IFataRequestCommonOptions {
   url: string | URL;
   method: IMethod;
 }
 
-export interface IFeta {
+export interface IFata {
   readonly interceptors: {
-    readonly request: IRequestInterceptor<IFetaRequestOptions>;
-    readonly response: IResponseInterceptor<IFetaRequestOptions, unknown, IFetaError>;
+    readonly request: IRequestInterceptor<IFataRequestOptions>;
+    readonly response: IResponseInterceptor<IFataRequestOptions, unknown, IFataError>;
   };
-  readonly defaults: { readonly timeout: number; readonly headers: IFetaHeaderConfig };
+  readonly defaults: { readonly timeout: number; readonly headers: IFataHeaderConfig };
   readonly baseURL: string;
-  request<T>(config: IFetaRequestOptions): Promise<T>;
-  get<T>(url: string, config?: IFetaRequestCommonOptions): Promise<T>;
-  post<T>(url: string, config?: IFetaRequestCommonOptions): Promise<T>;
-  put<T>(url: string, config?: IFetaRequestCommonOptions): Promise<T>;
-  delete<T>(url: string, config?: IFetaRequestCommonOptions): Promise<T>;
-  options<T>(url: string, config?: IFetaRequestCommonOptions): Promise<T>;
-  head<T>(url: string, config?: IFetaRequestCommonOptions): Promise<T>;
-  trace<T>(url: string, config?: IFetaRequestCommonOptions): Promise<T>;
-  patch<T>(url: string, config?: IFetaRequestCommonOptions): Promise<T>;
+  request<T>(config: IFataRequestOptions): Promise<T>;
+  get<T>(url: string, config?: IFataRequestCommonOptions): Promise<T>;
+  post<T>(url: string, config?: IFataRequestCommonOptions): Promise<T>;
+  put<T>(url: string, config?: IFataRequestCommonOptions): Promise<T>;
+  delete<T>(url: string, config?: IFataRequestCommonOptions): Promise<T>;
+  options<T>(url: string, config?: IFataRequestCommonOptions): Promise<T>;
+  head<T>(url: string, config?: IFataRequestCommonOptions): Promise<T>;
+  trace<T>(url: string, config?: IFataRequestCommonOptions): Promise<T>;
+  patch<T>(url: string, config?: IFataRequestCommonOptions): Promise<T>;
 }
-export class Feta implements IFeta {
+export class Fata implements IFata {
   constructor(private _baseURL?: string) {}
 
-  private _requestInterceptor = new RequestInterceptor<IFetaRequestOptions>();
-  private _responseInterceptor = new ResponseInterceptor<IFetaRequestOptions, unknown, IFetaError>();
+  private _requestInterceptor = new RequestInterceptor<IFataRequestOptions>();
+  private _responseInterceptor = new ResponseInterceptor<IFataRequestOptions, unknown, IFataError>();
 
   private _defaults: {
     timeout: number;
-    headers: IFetaHeaderConfig;
+    headers: IFataHeaderConfig;
   } = {
     timeout: 60 * 1000, // 60s,
     headers: {
@@ -90,10 +90,10 @@ export class Feta implements IFeta {
     const self = this;
     return {
       get request() {
-        return self._requestInterceptor as IRequestInterceptor<IFetaRequestOptions>;
+        return self._requestInterceptor as IRequestInterceptor<IFataRequestOptions>;
       },
       get response() {
-        return self._responseInterceptor as IResponseInterceptor<IFetaRequestOptions, unknown, IFetaError>;
+        return self._responseInterceptor as IResponseInterceptor<IFataRequestOptions, unknown, IFataError>;
       },
     };
   }
@@ -110,7 +110,7 @@ export class Feta implements IFeta {
     this._baseURL = baseURL;
   }
 
-  public async request<T>(config: IFetaRequestOptions): Promise<T> {
+  public async request<T>(config: IFataRequestOptions): Promise<T> {
     const url = config.url instanceof URL ? config.url : new URL(`${this.baseURL.replace(/\/+$/, "")}/${config.url.replace(/^\/+/, "")}`);
     config.header = config.header || {};
 
@@ -144,7 +144,7 @@ export class Feta implements IFeta {
       }
     }
 
-    config = await this._requestInterceptor.exec(config).catch((err) => Promise.reject(FetaError.fromError(err)));
+    config = await this._requestInterceptor.exec(config).catch((err) => Promise.reject(FataError.fromError(err)));
 
     const headers = new Headers();
 
@@ -162,7 +162,7 @@ export class Feta implements IFeta {
         ? undefined
         : ["GET", "HEAD"].indexOf(config.method.toUpperCase()) > -1
         ? undefined
-        : config.body instanceof FetaForm
+        : config.body instanceof FataForm
         ? config.body.formData()
         : config.body instanceof Blob
         ? config.body
@@ -191,7 +191,7 @@ export class Feta implements IFeta {
 
     return (timeout ? timeoutIt(timeout, exec()) : exec())
       .then(async (resp) => {
-        if (!resp.ok) return Promise.reject(FetaError.fromResponse(resp));
+        if (!resp.ok) return Promise.reject(FataError.fromResponse(resp));
         const contentType = resp.headers.get("content-type");
         switch (contentType) {
           case "application/json":
@@ -208,44 +208,46 @@ export class Feta implements IFeta {
         return this._responseInterceptor.runSuccess(config, resp, data) as Promise<T>;
       })
       .catch((err) => {
-        const runtimeErr = err instanceof FetaError ? err : err instanceof Error ? FetaError.fromError(err) : new FetaError(err + "");
+        const runtimeErr = err instanceof FataError ? err : err instanceof Error ? FataError.fromError(err) : new FataError(err + "");
 
         return this._responseInterceptor.runError<T>(config, runtimeErr) as Promise<T>;
       })
       .catch((err) => {
-        return Promise.reject(FetaError.fromError(err));
+        return Promise.reject(FataError.fromError(err));
       });
   }
 
-  public async get<T>(url: string, config: IFetaRequestCommonOptions = {}): Promise<T> {
+  public async get<T>(url: string, config: IFataRequestCommonOptions = {}): Promise<T> {
     return this.request<T>({ url, method: "GET", ...config });
   }
 
-  public async post<T>(url: string, config: IFetaRequestCommonOptions = {}): Promise<T> {
+  public async post<T>(url: string, config: IFataRequestCommonOptions = {}): Promise<T> {
     return this.request<T>({ url, method: "POST", ...config });
   }
 
-  public async put<T>(url: string, config: IFetaRequestCommonOptions = {}): Promise<T> {
+  public async put<T>(url: string, config: IFataRequestCommonOptions = {}): Promise<T> {
     return this.request<T>({ url, method: "PUT", ...config });
   }
 
-  public async delete<T>(url: string, config: IFetaRequestCommonOptions = {}): Promise<T> {
+  public async delete<T>(url: string, config: IFataRequestCommonOptions = {}): Promise<T> {
     return this.request<T>({ url, method: "DELETE", ...config });
   }
 
-  public async head<T>(url: string, config: IFetaRequestCommonOptions = {}): Promise<T> {
+  public async head<T>(url: string, config: IFataRequestCommonOptions = {}): Promise<T> {
     return this.request<T>({ url, method: "HEAD", ...config });
   }
 
-  public async options<T>(url: string, config: IFetaRequestCommonOptions = {}): Promise<T> {
+  public async options<T>(url: string, config: IFataRequestCommonOptions = {}): Promise<T> {
     return this.request<T>({ url, method: "OPTIONS", ...config });
   }
 
-  public async trace<T>(url: string, config: IFetaRequestCommonOptions = {}): Promise<T> {
+  public async trace<T>(url: string, config: IFataRequestCommonOptions = {}): Promise<T> {
     return this.request<T>({ url, method: "TRACE", ...config });
   }
 
-  public async patch<T>(url: string, config: IFetaRequestCommonOptions = {}): Promise<T> {
+  public async patch<T>(url: string, config: IFataRequestCommonOptions = {}): Promise<T> {
     return this.request<T>({ url, method: "PATCH", ...config });
   }
 }
+
+export default Fata

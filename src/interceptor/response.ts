@@ -3,9 +3,6 @@ export interface IResponseInterceptor<IConfig, IData, IErr> {
     success: onSuccess<IConfig, IData>, // on success
     error: onError<IConfig, IData, IErr> // on error
   ): () => void;
-
-  // runSuccess<T>(config: IConfig, response: Response, data: IData): Promise<T | IData>;
-  // runError<T>(config: IConfig, err: IErr): Promise<T | IData>;
 }
 
 type onSuccess<IConfig, IData> = (config: IConfig, response: Response, data: IData) => Promise<IData>;

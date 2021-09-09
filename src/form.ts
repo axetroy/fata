@@ -1,8 +1,8 @@
-interface IFetaForm {
+interface IFataForm {
   [key: string]: any;
 }
 
-export class FetaForm<T extends IFetaForm> {
+export class FataForm<T extends IFataForm> {
   constructor(private _form: T) {}
   public formData(): FormData {
     const form = new FormData();
