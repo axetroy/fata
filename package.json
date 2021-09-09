@@ -7,7 +7,7 @@
     "compile": "npx tsc",
     "build": "cross-env NODE_ENV=production webpack --progress",
     "watch": "cross-env NODE_ENV=development webpack --progress --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 0"
   },
   "files": [
     "README.md",
