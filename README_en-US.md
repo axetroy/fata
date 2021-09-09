@@ -1,6 +1,6 @@
 [中文简体](README.md) | English
 
-[![Build Status](https://github.com/axetroy/swagger2ts/workflows/test/badge.svg)](https://github.com/axetroy/swagger2ts/actions)
+[![Build Status](https://github.com/axetroy/fetest/workflows/test/badge.svg)](https://github.com/axetroy/fetest/actions)
 
 Elegant/modern HTTP client based on Fetch
 

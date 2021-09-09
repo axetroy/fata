@@ -7,59 +7,29 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        deno: ["v1.x"]
         os: [ubuntu-latest, macOS-latest, windows-latest]
     name: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
-      - name: Setup deno
-        uses: denoland/setup-deno@v1
+      - uses: actions/setup-node@v2
         with:
-          deno-version: ${{ matrix.deno }}
+          deno-version: 16
 
-      - name: Env
+      - name: install
         run: |
-          deno --version
-
-      - name: Format
-        if: runner.os != 'Windows'
-        env:
-          RUST_BACKTRACE: 1
-        run: |
-          make format
+          npm install
 
       - name: Test
-        env:
-          RUST_BACKTRACE: 1
         run: |
           make test
 
-      - name: Bundle
-        run: make bundle
   release:
     name: Release to Github
-    if: startsWith(github.ref, 'refs/tags/') && github.repository == 'axetroy/swagger2ts'
+    if: startsWith(github.ref, 'refs/tags/') && github.repository == 'axetroy/fetest'
     needs: [test]
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        deno: ["v1.x"]
     steps:
       - uses: actions/checkout@v2
-
-      - name: Setup deno
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: ${{ matrix.deno }}
-
-      - name: Bundle
-        run: make bundle
-
-      - name: Bump version
-        env:
-          GITHUB_REF: ${{ github.ref }}
-        run: |
-          node ./script/bump.mjs
 
       - name: Publish to NPM
         uses: JS-DevTools/npm-publish@v1
