@@ -1,7 +1,7 @@
 .github
 node_modules
 .prettierrc.json
-ronovate.json
+renovate.json
 tsconfig.json
 webpack.config.js
 src
