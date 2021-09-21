@@ -38,12 +38,15 @@ interface IFataRequestCommonOptions extends Omit<RequestInit, "body" | "method">
   };
   body?: BodyInit | null | FataFormData | FataURLSearchParams;
   timeout?: number;
+  transformer?: Transformer;
 }
 
 export interface IFataRequestOptions extends IFataRequestCommonOptions {
   url: string | URL;
   method: IMethod;
 }
+
+type Transformer = (resp: Response) => Promise<unknown>;
 
 export interface IFata {
   readonly interceptors: {
@@ -89,6 +92,25 @@ export class Fata implements IFata {
     },
   };
 
+  /**
+   * response transformer
+   * @param resp
+   * @returns
+   */
+  private async _transformer(resp: Response): Promise<unknown> {
+    const contentType = resp.headers.get("content-type");
+    switch (contentType) {
+      case "application/json":
+        return { data: await resp.json(), resp };
+      case "application/x-www-form-urlencoded":
+        return { data: await resp.formData(), resp };
+      case "application/octet-stream":
+        return { data: await resp.blob(), resp };
+      default:
+        return { data: await resp.text(), resp };
+    }
+  }
+
   public get interceptors() {
     const self = this;
     return {
@@ -97,6 +119,9 @@ export class Fata implements IFata {
       },
       get response() {
         return self._responseInterceptor as IResponseInterceptor<IFataRequestOptions, unknown, IFataError>;
+      },
+      set transformer(fn: Transformer) {
+        self._transformer = fn;
       },
     };
   }
@@ -216,17 +241,7 @@ export class Fata implements IFata {
     return (timeout ? timeoutIt(timeout, exec()) : exec())
       .then(async (resp) => {
         if (!resp.ok) return Promise.reject(FataError.fromResponse(resp));
-        const contentType = resp.headers.get("content-type");
-        switch (contentType) {
-          case "application/json":
-            return { data: await resp.json(), resp };
-          case "application/x-www-form-urlencoded":
-            return { data: await resp.formData(), resp };
-          case "application/octet-stream":
-            return { data: await resp.blob(), resp };
-          default:
-            return { data: await resp.text(), resp };
-        }
+        return typeof config.transformer === "function" ? config.transformer(resp) : this._transformer(resp);
       })
       .then(({ data, resp }) => {
         return this._responseInterceptor.runSuccess(config, resp, data) as Promise<T>;
