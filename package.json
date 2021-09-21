@@ -12,9 +12,9 @@
   },
   "files": [
     "README.md",
+    "README_en-US.md",
     "LICENSE",
-    "./dist/**/*.js",
-    "./dist/**/*.d.ts"
+    "./dist"
   ],
   "repository": {
     "type": "git",
