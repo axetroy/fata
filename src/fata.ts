@@ -1,4 +1,4 @@
-import { FataForm } from "./form";
+import { FataFormData, FataURLSearchParams } from "./form";
 import { IFataError, FataError } from "./error";
 import { IRequestInterceptor, RequestInterceptor } from "./interceptor/request";
 import { IResponseInterceptor, ResponseInterceptor } from "./interceptor/response";
@@ -36,7 +36,7 @@ interface IFataRequestCommonOptions extends Omit<RequestInit, "body" | "method">
   header?: {
     [key: string]: Stringable;
   };
-  body?: any;
+  body?: BodyInit | null | FataFormData | FataURLSearchParams;
   timeout?: number;
 }
 
@@ -63,6 +63,9 @@ export interface IFata {
   patch<T>(url: string, config?: IFataRequestCommonOptions): Promise<T>;
 }
 export class Fata implements IFata {
+  /**
+   * @param { string } _baseURL the client base url. eg. http://example.com/api
+   */
   constructor(private _baseURL?: string) {}
 
   private _requestInterceptor = new RequestInterceptor<IFataRequestOptions>();
@@ -156,19 +159,40 @@ export class Fata implements IFata {
     }
 
     const timeout = config.timeout || defaults.timeout;
+    let contentType = headers.get("Content-Type");
+    let body: any = null;
 
-    const body =
-      config.body === undefined
-        ? undefined
-        : ["GET", "HEAD"].indexOf(config.method.toUpperCase()) > -1
-        ? undefined
-        : config.body instanceof FataForm
-        ? config.body.formData()
-        : config.body instanceof Blob
-        ? config.body
-        : typeof config.body === "object"
-        ? JSON.stringify(config.body)
-        : config.body.toString();
+    const typeofBody = typeof config.body;
+
+    if (config.body === undefined || config.body === null || ["GET", "HEAD"].indexOf(config.method.toUpperCase()) > -1) {
+      contentType = "text/xml;charset=UTF-8";
+    } else if (config.body instanceof FormData) {
+      contentType = "multipart/form-data";
+      body = config.body instanceof FataFormData ? config.body.formData() : config.body;
+    } else if (config.body instanceof URLSearchParams) {
+      contentType = "application/x-www-form-urlencoded;charset=UTF-8";
+      body = config.body instanceof FataURLSearchParams ? config.body.URLSearchParams() : config.body;
+    } else if (typeof ReadableStream !== "undefined" && config.body instanceof ReadableStream) {
+      body = config.body;
+    } else if (config.body instanceof Blob) {
+      body = config.body;
+    } else if (typeof ArrayBuffer !== "undefined" && config.body instanceof ArrayBuffer) {
+      body = config.body;
+    } else if (typeofBody === "object") {
+      contentType = "application/json;charset=UTF-8";
+      body = JSON.stringify(config.body);
+    } else if (typeofBody === "string" || typeofBody === "boolean" || typeofBody === "number") {
+      contentType = "text/xml;charset=UTF-8";
+      body = config.body;
+    } else {
+      contentType = "text/xml;charset=UTF-8";
+      body = config.body;
+    }
+
+    if (contentType) {
+      headers.delete("Content-Type");
+      headers.set("Content-Type", contentType);
+    }
 
     const exec = () =>
       fetch(url.toString(), {
@@ -250,4 +274,4 @@ export class Fata implements IFata {
   }
 }
 
-export default Fata
+export default Fata;
