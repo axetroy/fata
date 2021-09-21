@@ -10,12 +10,6 @@
     "watch": "cross-env NODE_ENV=development webpack --progress --watch",
     "test": "echo \"Error: no test specified\" && exit 0"
   },
-  "files": [
-    "README.md",
-    "README_en-US.md",
-    "LICENSE",
-    "./dist"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/axetroy/fata.git"
