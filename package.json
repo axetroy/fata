@@ -1,6 +1,6 @@
 {
   "name": "@axetroy/fata",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Elegant and modern HTTP client based on Fetch",
   "main": "dist/fata.js",
   "typings": "./dist",
